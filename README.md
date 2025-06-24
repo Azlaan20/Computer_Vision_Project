@@ -159,16 +159,6 @@ pose-estimation-hci/
 
 ---
 
-## 🖼 Sample Output Visuals
-
-| RGB Pose + SIFT + Gesture       | Depth Map (Magma)              |
-| ------------------------------- | ------------------------------ |
-| ![pose](assets/pose_output.jpg) | ![depth](assets/depth_map.jpg) |
-
-> Live FPS, detected joints, and gesture labels are overlaid in real time.
-
----
-
 ## 📊 Evaluation Metrics
 
 | Metric             | Result (CPU)     |
