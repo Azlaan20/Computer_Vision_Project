@@ -1,217 +1,116 @@
-# 📌 Pose Estimation for Human-Computer Interaction
+# Pose Estimation for Human-Computer Interaction
 
-> A real-time system for human keypoint detection, 3D pose reconstruction, and gesture recognition using a hybrid pipeline of classical vision techniques and modern deep learning frameworks.
+Real-time human pose estimation, monocular depth inference, and rule-based gesture recognition using MediaPipe, MiDaS, OpenCV, SIFT, and PyTorch.
 
----
+## Overview
 
-## 🔍 Overview
+The project combines:
 
-This project implements a **real-time human pose estimation framework** capable of interpreting body movements and gestures through 2D keypoint detection and monocular 3D pose reconstruction. It integrates:
+- MediaPipe Pose for 2D body landmarks
+- MiDaS Small for monocular depth estimation
+- SIFT for classical feature detection
+- Rule-based gesture recognition for hands-up, T-pose, hands-on-hips, and directional pointing
+- OpenCV controls for brightness, contrast, low-light simulation, occlusion, visualization, and snapshot capture
 
-- **MediaPipe** for landmark detection  
-- **MiDaS** for depth estimation  
-- **SIFT (Scale-Invariant Feature Transform)** for classical keypoint detection  
-- A **rule-based gesture recognition engine** for understanding intuitive actions
+`Task_1.py` provides a lightweight real-time 2D pose demo. `Task_2.py` runs the full pose + depth + SIFT + gesture pipeline.
 
-The system includes an interactive UI with brightness/contrast control, gesture overlays, and side-by-side visualization of RGB pose tracking and depth maps — designed for performance, robustness, and extensibility.
-
----
-
-## 🎯 Objectives
-
-- Detect 2D body keypoints in real time
-- Extend 2D joints into 3D space using depth estimation
-- Recognize gestures like "Hands Up", "T-Pose", "Hands on Hips", and directional pointing
-- Benchmark classical SIFT against modern DL models
-- Operate reliably in low-light, high-contrast, and occluded scenarios
-- Provide GUI-based environmental simulation and tuning
-- Capture scenario-specific snapshots automatically
-
----
-
-## 🧠 System Architecture
+## Architecture
 
 ```mermaid
 graph TD
     A[Webcam Input] --> B[Frame Preprocessing]
-    B --> C[SIFT Keypoint Detection]
-    B --> D[MediaPipe Pose Estimation]
-    D --> E[MiDaS Depth Estimation]
-    E --> F[3D Keypoint Mapping]
-    F --> G[Gesture Recognition]
-    G --> H[Visualization + UI Rendering]
-    H --> I[Snapshot Capture]
-````
-
----
-
-## 🧰 Tech Stack
-
-| Component                | Tool / Framework                                    |
-| ------------------------ | --------------------------------------------------- |
-| Programming Language     | Python 3.8                                          |
-| Computer Vision          | OpenCV 4.x                                          |
-| Pose Estimation          | MediaPipe Pose (Google)                             |
-| Depth Estimation         | MiDaS v3 Small (via PyTorch Hub)                    |
-| Deep Learning Framework  | PyTorch                                             |
-| Classical Feature Method | SIFT (Scale-Invariant Feature Transform)            |
-| UI Controls              | OpenCV Windows + Trackbars                          |
-| Hardware Used            | Webcam (640×480), Intel i5 CPU, optional NVIDIA GPU |
-
----
-
-## ⚙️ Features & Capabilities
-
-### ✅ Pose Estimation
-
-* 33 body landmarks via MediaPipe
-* Real-time skeletal overlay
-* Pose responsiveness under environmental constraints
-
-### ✅ Depth Estimation
-
-* Monocular depth inference using MiDaS
-* Bicubic interpolation for pixel-accurate z-values
-* Color-coded (Magma) depth map visualization
-
-### ✅ Gesture Recognition
-
-* Geometric rule-based classification
-* Recognizes:
-
-  * 🖐 Hands Up
-  * ✋ T-Pose
-  * 🤷 Hands on Hips
-  * 👉 Pointing (Left/Right)
-
-### ✅ Classical vs DL Comparison
-
-* Overlay of SIFT keypoints for performance benchmarking
-* FPS, joint counts, and SIFT stats displayed live
-
-### ✅ Interactive Simulation
-
-* GUI sliders for:
-
-  * Brightness control
-  * Contrast adjustment
-* Simulated:
-
-  * Low-light conditions
-  * Occlusion masking
-
-### ✅ Output & Snapshots
-
-* Side-by-side: Pose tracking + Depth map
-* Auto-snapshot logic for:
-
-  * All keypoints detected
-  * Gestures activated
-  * Max/min brightness & contrast
-
----
-
-## 🛠️ Installation & Setup
-
-### Prerequisites
-
-Ensure Python ≥ 3.8 with the following libraries:
-
-```bash
-pip install opencv-python mediapipe torch torchvision psutil
+    B --> C[SIFT Features]
+    B --> D[MediaPipe Pose]
+    D --> E[MiDaS Depth]
+    E --> F[Depth-Augmented Landmarks]
+    F --> G[Rule-Based Gestures]
+    G --> H[Visualization and Snapshot Capture]
 ```
 
-### Clone and Run
+## Tech Stack
+
+- Python
+- OpenCV
+- MediaPipe
+- PyTorch / Torch Hub
+- MiDaS
+- NumPy
+- SIFT
+
+## Installation
+
+Python 3.10 is recommended.
 
 ```bash
-git clone https://github.com/your-username/pose-estimation-hci.git
-cd pose-estimation-hci
+git clone https://github.com/Azlaan20/Computer_Vision_Project.git
+cd Computer_Vision_Project
+python -m venv .venv
 ```
 
-### Run Fast Mode (2D Pose Only)
+Activate the environment, then install dependencies:
+
+```bash
+pip install opencv-python mediapipe torch torchvision numpy
+```
+
+A webcam is required to run the demos. MiDaS weights are downloaded through Torch Hub when the full pipeline starts for the first time.
+
+## Usage
+
+Fast 2D pose mode:
 
 ```bash
 python Task_1.py
 ```
 
-### Run Full Pipeline (3D Pose + Gesture + UI)
+Full pose/depth/gesture pipeline:
 
 ```bash
 python Task_2.py
 ```
 
-> ⚠️ Ensure a webcam is connected. A GPU is recommended but not required.
+Full-pipeline controls:
 
----
+- `q` — quit
+- `l` — toggle simulated low light
+- `o` — toggle simulated occlusion
+- OpenCV trackbars — adjust brightness and contrast
 
-## 📁 Repository Structure
+## Repository Structure
 
+```text
+Computer_Vision_Project/
+├── Task_1.py               # Lightweight MediaPipe pose demo
+├── Task_2.py               # Pose + MiDaS + SIFT + gesture pipeline
+├── clean_midas_cache.py    # Optional explicit MiDaS cache cleanup utility
+├── Project_Report.docx
+├── Project_Report.pdf
+├── Project_Statement.pdf
+└── README.md
 ```
-pose-estimation-hci/
-│
-├── Task_1.py               # Fast mode: MediaPipe 2D pose only
-├── Task_2.py               # Full pipeline: 3D + Gesture + UI + Depth
-├── Project_Report.docx     # Editable project report
-├── Project_Report.pdf      # Final formatted documentation
-├── Project_Statement.pdf   # Assignment specification
-└── README.md               # Project overview
-```
 
----
+## Outputs
 
-## 📊 Evaluation Metrics
+The full pipeline can save example frames when conditions such as complete landmark detection, gesture detection, or brightness/contrast limits are reached. Existing result images in the repository show representative outputs.
 
-| Metric             | Result (CPU)     |
-| ------------------ | ---------------- |
-| DL Keypoints       | 33 (MediaPipe)   |
-| Classical Features | \~100–150 (SIFT) |
-| Depth Resolution   | Full Frame       |
-| FPS (CPU)          | \~15–22          |
-| FPS (GPU)          | \~28–35          |
+## Notes on Evaluation
 
-Tested under varied:
+The repository reports real-time FPS and counts detected MediaPipe landmarks and SIFT features during execution. Performance depends strongly on CPU/GPU hardware, camera resolution, lighting, and whether MiDaS inference runs on CPU or CUDA.
 
-* Lighting: min, max, simulated occlusion
-* Gestures: dynamic arm movements
-* Pose completeness: full-body detection
+The qualitative MediaPipe-vs-SIFT comparison should be interpreted as a demonstration of two different feature paradigms rather than a controlled accuracy benchmark: MediaPipe estimates semantic body landmarks, whereas SIFT detects generic local image features.
 
----
+## Safety and Side Effects
 
-## 🔬 Comparative Insights
+The pose scripts only access the webcam, process frames, and optionally save output images. They do not terminate unrelated applications, delete temporary directories, or empty the operating system recycle bin. The separate `clean_midas_cache.py` utility performs cache deletion only when explicitly run by the user.
 
-| Aspect                  | MediaPipe (DL)     | SIFT (Classical)        |
-| ----------------------- | ------------------ | ----------------------- |
-| Accuracy                | ✅ High             | ❌ Low for body joints   |
-| Temporal Consistency    | ✅ Smooth tracking  | ❌ No temporal model     |
-| Robustness to Occlusion | ✅ Medium           | ❌ Low                   |
-| Processing Speed        | ✅ Optimized        | ✅ Fast (low complexity) |
-| Depth Compatibility     | ✅ MiDaS-compatible | ❌ 2D only               |
+## References
 
----
+- MediaPipe Pose
+- MiDaS
+- OpenCV
+- D. Lowe, SIFT
+- PyTorch Hub
 
-## 🧪 Applications
+## Academic Context
 
-* Gesture-controlled interfaces (e.g., sign recognition)
-* Augmented and Virtual Reality (AR/VR)
-* Physical therapy and rehabilitation feedback
-* Robotics control using body gestures
-* Human activity monitoring for safety/compliance
-
----
-
-## 🔗 References
-
-* [MediaPipe Pose](https://developers.google.com/mediapipe/solutions/pose)
-* [MiDaS Depth Estimation](https://github.com/isl-org/MiDaS)
-* [OpenCV](https://opencv.org/)
-* [D. Lowe, SIFT](https://www.cs.ubc.ca/~lowe/papers/ijcv04.pdf)
-* [PyTorch Hub](https://pytorch.org/hub/)
-* [Google AI Blog on Pose Estimation](https://ai.googleblog.com/2020/05/)
-
----
-
-## 🤝 Acknowledgments
-
-This project was developed as part of the **CS-474 Computer Vision** course at NUST College of EME, Islamabad. We thank our instructor and peers for guidance throughout.
-
----
+Developed as part of the CS-474 Computer Vision course at NUST College of EME, Islamabad.
